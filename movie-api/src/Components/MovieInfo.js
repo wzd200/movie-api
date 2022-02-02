@@ -7,13 +7,13 @@ const MovieInfo = () => {
     let [error, setError] = useState(false);
     let [loading, setLoading] = useState(false);
 
-    const getMovieInfo = () => {
+    const getMovieInfo = (e) => {
         var axios = require("axios").default;
 
         var options = {
         method: 'GET',
         url: 'https://movie-database-imdb-alternative.p.rapidapi.com/',
-        params: {s: 'Avengers Endgame', r: 'json', page: '1'},
+        params: {s: movie, r: 'json', page: '1'},
         headers: {
             'x-rapidapi-host': 'movie-database-imdb-alternative.p.rapidapi.com',
             'x-rapidapi-key': '2d262fbfa4msh92c2df0d1e87162p13d87bjsn82d2e6ce542e'
@@ -25,12 +25,23 @@ const MovieInfo = () => {
         }).catch(function (error) {
             console.error(error);
         });
+
+        e.preventDefault()
     } 
 
     return (
         <div>
             <h2>Movie App</h2>
-            <button onClick={getMovieInfo}>Get Movie</button>
+            <form onSubmit={getMovieInfo}>
+                <input 
+                    type="text"
+                    onChange={(e) => setMovie(e.target.value)}
+                    value={movie}
+                    placeholder="Enter Movie Name"
+                    />
+                
+                <button>Get Movie</button>
+            </form>
         </div>
     )
 }
