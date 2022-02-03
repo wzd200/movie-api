@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import MovieConditions from "./Conditions/MovieConditions";
 // import axios from "axios";
 
 const MovieInfo = () => {
@@ -6,29 +7,44 @@ const MovieInfo = () => {
     let [responseObj, setResponseObj] = useState({});
     let [error, setError] = useState(false);
     let [loading, setLoading] = useState(false);
-
+    
     const getMovieInfo = (e) => {
         var axios = require("axios").default;
-
-        var options = {
-        method: 'GET',
-        url: 'https://movie-database-imdb-alternative.p.rapidapi.com/',
-        params: {s: movie, r: 'json', page: '1'},
-        headers: {
-            'x-rapidapi-host': 'movie-database-imdb-alternative.p.rapidapi.com',
-            'x-rapidapi-key': '2d262fbfa4msh92c2df0d1e87162p13d87bjsn82d2e6ce542e'
+        
+        e.preventDefault()
+        
+        if (movie.length === 0) {
+            return setError(true)
         }
+        
+        var options = {
+            method: 'GET',
+            url: 'https://movie-database-imdb-alternative.p.rapidapi.com/',
+            params: {s: movie, r: 'json', page: '1'},
+            headers: {
+                'x-rapidapi-host': 'movie-database-imdb-alternative.p.rapidapi.com',
+                'x-rapidapi-key': '2d262fbfa4msh92c2df0d1e87162p13d87bjsn82d2e6ce542e'
+            }
         };
-
+        
         axios.request(options).then(function (response) {
-            console.log(response.data);
+
+            setResponseObj(response.data);
+            setLoading(false)
         }).catch(function (error) {
             console.error(error);
+            setError(true)
+            setLoading(false)
         });
-
-        e.preventDefault()
+        
+        // console.log(responseObj)
+        
+        // setError(false)
+        // setResponseObj({})
+        // setLoading(true)
     } 
-
+    console.log(responseObj)
+    
     return (
         <div>
             <h2>Movie App</h2>
@@ -42,6 +58,11 @@ const MovieInfo = () => {
                 
                 <button>Get Movie</button>
             </form>
+            <MovieConditions
+                responseObj={responseObj}
+                error={error}
+                loading={loading}
+            />
         </div>
     )
 }
